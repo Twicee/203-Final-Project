@@ -742,12 +742,12 @@ public final class Functions {
         return Math.min(high, Math.max(value, low));
     }
 
-    public static void shiftView(WorldView view, int colDelta, int rowDelta) {
-        int newCol = clamp(view.viewport.col + colDelta, 0, view.world.numCols - view.viewport.numCols);
-        int newRow = clamp(view.viewport.row + rowDelta, 0, view.world.numRows - view.viewport.numRows);
-
-        shift(view.viewport, newCol, newRow);
-    }
+//    public static void shiftView(WorldView view, int colDelta, int rowDelta) {
+//        int newCol = clamp(view.viewport.col + colDelta, 0, view.world.numCols - view.viewport.numCols);
+//        int newRow = clamp(view.viewport.row + rowDelta, 0, view.world.numRows - view.viewport.numRows);
+//
+//        shift(view.viewport, newCol, newRow);
+//    }
 
     public static void processImageLine(Map<String, List<PImage>> images, String line, PApplet screen) {
         String[] attrs = line.split("\\s");
@@ -789,10 +789,10 @@ public final class Functions {
         img.updatePixels();
     }
 
-    public static void shift(Viewport viewport, int col, int row) {
-        viewport.col = col;
-        viewport.row = row;
-    }
+//    public static void shift(Viewport viewport, int col, int row) {
+//        viewport.col = col;
+//        viewport.row = row;
+//    }
 
     public static boolean contains(Viewport viewport, Point p) {
         return p.y >= viewport.row && p.y < viewport.row + viewport.numRows && p.x >= viewport.col && p.x < viewport.col + viewport.numCols;

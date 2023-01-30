@@ -4,6 +4,8 @@ import java.util.*;
 
 import processing.core.*;
 
+import javax.swing.text.View;
+
 public final class VirtualWorld extends PApplet {
     private static String[] ARGS;
 
@@ -99,7 +101,7 @@ public final class VirtualWorld extends PApplet {
                 case LEFT -> dx -= 1;
                 case RIGHT -> dx += 1;
             }
-            Functions.shiftView(view, dx, dy);
+            view.shiftView(dx, dy);
         }
     }
 
