@@ -3,10 +3,18 @@
  * Action a specified time.
  */
 public final class Event {
-    public Action action;
-    public double time;
-    public Entity entity;
-
+    private Action action;
+    private double time;
+    private Entity entity;
+    public double getTime() {
+        return time;
+    }
+    public Entity getEntity() {
+        return entity;
+    }
+    public Action getAction() {
+        return action;
+    }
     public Event(Action action, double time, Entity entity) {
         this.action = action;
         this.time = time;

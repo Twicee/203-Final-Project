@@ -9,33 +9,33 @@ import javax.swing.text.View;
 public final class VirtualWorld extends PApplet {
     private static String[] ARGS;
 
-    public static final int VIEW_WIDTH = 640;
-    public static final int VIEW_HEIGHT = 480;
-    public static final int TILE_WIDTH = 32;
-    public static final int TILE_HEIGHT = 32;
+    private static final int VIEW_WIDTH = 640;
+    private static final int VIEW_HEIGHT = 480;
+    private static final int TILE_WIDTH = 32;
+    private static final int TILE_HEIGHT = 32;
 
-    public static final int VIEW_COLS = VIEW_WIDTH / TILE_WIDTH;
-    public static final int VIEW_ROWS = VIEW_HEIGHT / TILE_HEIGHT;
+    private static final int VIEW_COLS = VIEW_WIDTH / TILE_WIDTH;
+    private static final int VIEW_ROWS = VIEW_HEIGHT / TILE_HEIGHT;
 
-    public static final String IMAGE_LIST_FILE_NAME = "imagelist";
-    public static final String DEFAULT_IMAGE_NAME = "background_default";
-    public static final int DEFAULT_IMAGE_COLOR = 0x808080;
+    private static final String IMAGE_LIST_FILE_NAME = "imagelist";
+    private static final String DEFAULT_IMAGE_NAME = "background_default";
+    private static final int DEFAULT_IMAGE_COLOR = 0x808080;
 
-    public static final String FAST_FLAG = "-fast";
-    public static final String FASTER_FLAG = "-faster";
-    public static final String FASTEST_FLAG = "-fastest";
-    public static final double FAST_SCALE = 0.5;
-    public static final double FASTER_SCALE = 0.25;
-    public static final double FASTEST_SCALE = 0.10;
+    private static final String FAST_FLAG = "-fast";
+    private static final String FASTER_FLAG = "-faster";
+    private static final String FASTEST_FLAG = "-fastest";
+    private static final double FAST_SCALE = 0.5;
+    private static final double FASTER_SCALE = 0.25;
+    private static final double FASTEST_SCALE = 0.10;
 
-    public String loadFile = "world.sav";
-    public long startTimeMillis = 0;
-    public double timeScale = 1.0;
+    private String loadFile = "world.sav";
+    private long startTimeMillis = 0;
+    private double timeScale = 1.0;
 
-    public ImageStore imageStore;
-    public WorldModel world;
-    public WorldView view;
-    public EventScheduler scheduler;
+    private ImageStore imageStore;
+    private WorldModel world;
+    private WorldView view;
+    private EventScheduler scheduler;
 
     public void settings() {
         size(VIEW_WIDTH, VIEW_HEIGHT);
@@ -59,11 +59,11 @@ public final class VirtualWorld extends PApplet {
         double appTime = (System.currentTimeMillis() - startTimeMillis) * 0.001;
         double frameTime = (appTime - scheduler.currentTime)/timeScale;
         this.update(frameTime);
-        Functions.drawViewport(view);
+        view.drawViewport();
     }
 
     public void update(double frameTime){
-        Functions.updateOnTime(scheduler, frameTime);
+        scheduler.updateOnTime(frameTime);
     }
 
     // Just for debugging and for P5
@@ -75,19 +75,19 @@ public final class VirtualWorld extends PApplet {
         Optional<Entity> entityOptional = world.getOccupant(pressed);
         if (entityOptional.isPresent()) {
             Entity entity = entityOptional.get();
-            System.out.println(entity.id + ": " + entity.kind + " : " + entity.health);
+            System.out.println(entity.getId() + ": " + entity.getEntityKind() + " : " + entity.getHealth());
         }
 
     }
 
     public void scheduleActions(WorldModel world, EventScheduler scheduler, ImageStore imageStore) {
-        for (Entity entity : world.entities) {
-            Functions.scheduleActions(entity, scheduler, world, imageStore);
+        for (Entity entity : world.getEntities()) {
+            entity.scheduleActions(scheduler, world, imageStore);
         }
     }
 
     private Point mouseToPoint() {
-        return Functions.viewportToWorld(view.viewport, mouseX / TILE_WIDTH, mouseY / TILE_HEIGHT);
+        return view.getViewport().viewportToWorld(mouseX / TILE_WIDTH, mouseY / TILE_HEIGHT);
     }
 
     public void keyPressed() {
