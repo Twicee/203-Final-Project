@@ -1,0 +1,12 @@
+Justification for Methods that Stayed within Functions():
+Many of the functions that stayed within the Functions() class was decided based on how often they were called in other classes.
+If called often I decided it was best to leave the function and have it be static so it might be callled by the class name in other classes.
+
+I moved viewportToWorld and worldToViewport as they both utilized an instance in Viewport as one of their arguments and thus seemed
+beneficial to move them inside. Likewise this same decision making was used in most of Entity's classes.
+
+Functions within WorldModel were decided based on the fact that their functions were respectively something done by the WorldModel,
+such as testing the bounds and locating the nearestEntities
+
+Functions that directly included the name of a single class within their definition were suspected of belonging to said class and
+thus I moved them there when appropriate. Examples include the functions within Action and EventScheduler.
