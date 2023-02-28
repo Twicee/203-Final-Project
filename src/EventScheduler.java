@@ -4,9 +4,12 @@ import java.util.*;
  * Keeps track of events that have been scheduled.
  */
 public final class EventScheduler {
-    public PriorityQueue<Event> eventQueue;
-    public Map<Entity, List<Event>> pendingEvents;
-    public double currentTime;
+    private PriorityQueue<Event> eventQueue;
+    private Map<Entity, List<Event>> pendingEvents;
+    private double currentTime;
+    public double getCurrentTime() {
+        return currentTime;
+    }
 
     public EventScheduler() {
         this.eventQueue = new PriorityQueue<>(new EventComparator());

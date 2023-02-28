@@ -96,9 +96,18 @@ public final class WorldModel {
     }
     public Optional<PImage> getBackgroundImage(Point pos) {
         if (this.withinBounds(pos)) {
-            return Optional.of(Functions.getCurrentImage(getBackgroundCell(pos)));
+            return Optional.of(getCurrentImage(getBackgroundCell(pos)));
         } else {
             return Optional.empty();
+        }
+    }
+    public static PImage getCurrentImage(Object object) {
+        if (object instanceof Background background) {
+            return background.getImages().get(background.getImageIndex());
+        } else if (object instanceof Entity entity) {
+            return entity.getImages().get(entity.getImageIndex() % entity.getImages().size());
+        } else {
+            throw new UnsupportedOperationException(String.format("getCurrentImage not supported for %s", object));
         }
     }
     public Entity getOccupancyCell(Point pos) {

@@ -127,7 +127,7 @@ public final class Entity {
         this.imageIndex = this.imageIndex + 1;
     }
     public Action createAnimationAction(int repeatCount) {
-        return new Action(ActionKind.ANIMATION, this, null, null, repeatCount);
+        return new Animation( this, repeatCount);
     }
     public double getAnimationPeriod() {
         switch (this.kind) {
@@ -212,7 +212,7 @@ public final class Entity {
         dude.scheduleActions(scheduler, world, imageStore);
     }
     public Action createActivityAction(WorldModel world, ImageStore imageStore) {
-        return new Action(ActionKind.ACTIVITY, this, world, imageStore, 0);
+        return new Activity(this, world, imageStore);
     }
     public boolean moveToFairy(WorldModel world, Entity target, EventScheduler scheduler) {
         if (Functions.adjacent(this.position, target.position)) {
