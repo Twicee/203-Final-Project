@@ -78,16 +78,16 @@ public final class Functions {
     public static void parseSapling(WorldModel world, String[] properties, Point pt, String id, ImageStore imageStore) {
         if (properties.length == SAPLING_NUM_PROPERTIES) {
             int health = Integer.parseInt(properties[SAPLING_HEALTH]);
-            Entity entity = Entity.createSapling(id, pt, Functions.getImageList(imageStore, Entity.SAPLING_KEY), health);
+            Entity entity = Sapling.createSapling(id, pt, Functions.getImageList(imageStore, Sapling.SAPLING_KEY), health);
             world.tryAddEntity(entity);
         }else{
-            throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", Entity.SAPLING_KEY, SAPLING_NUM_PROPERTIES));
+            throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", Sapling.SAPLING_KEY, SAPLING_NUM_PROPERTIES));
         }
     }
 
     public static void parseDude(WorldModel world, String[] properties, Point pt, String id, ImageStore imageStore) {
         if (properties.length == DUDE_NUM_PROPERTIES) {
-            Entity entity = Entity.createDudeNotFull(id, pt, Double.parseDouble(properties[DUDE_ACTION_PERIOD]), Double.parseDouble(properties[DUDE_ANIMATION_PERIOD]), Integer.parseInt(properties[DUDE_LIMIT]), Functions.getImageList(imageStore, DUDE_KEY));
+            Entity entity = DudeNotFull.createDudeNotFull(id, pt, Double.parseDouble(properties[DUDE_ACTION_PERIOD]), Double.parseDouble(properties[DUDE_ANIMATION_PERIOD]), Integer.parseInt(properties[DUDE_LIMIT]), Functions.getImageList(imageStore, DUDE_KEY));
             world.tryAddEntity(entity);
         }else{
             throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", DUDE_KEY, DUDE_NUM_PROPERTIES));
@@ -96,7 +96,7 @@ public final class Functions {
 
     public static void parseFairy(WorldModel world, String[] properties, Point pt, String id, ImageStore imageStore) {
         if (properties.length == FAIRY_NUM_PROPERTIES) {
-            Entity entity = Entity.createFairy(id, pt, Double.parseDouble(properties[FAIRY_ACTION_PERIOD]), Double.parseDouble(properties[FAIRY_ANIMATION_PERIOD]), Functions.getImageList(imageStore, FAIRY_KEY));
+            Entity entity = Fairy.createFairy(id, pt, Double.parseDouble(properties[FAIRY_ACTION_PERIOD]), Double.parseDouble(properties[FAIRY_ANIMATION_PERIOD]), Functions.getImageList(imageStore, FAIRY_KEY));
             world.tryAddEntity(entity);
         }else{
             throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", FAIRY_KEY, FAIRY_NUM_PROPERTIES));
@@ -105,16 +105,16 @@ public final class Functions {
 
     public static void parseTree(WorldModel world, String[] properties, Point pt, String id, ImageStore imageStore) {
         if (properties.length == TREE_NUM_PROPERTIES) {
-            Entity entity = Entity.createTree(id, pt, Double.parseDouble(properties[TREE_ACTION_PERIOD]), Double.parseDouble(properties[TREE_ANIMATION_PERIOD]), Integer.parseInt(properties[TREE_HEALTH]), Functions.getImageList(imageStore, Entity.TREE_KEY));
+            Entity entity = Tree.createTree(id, pt, Double.parseDouble(properties[TREE_ACTION_PERIOD]), Double.parseDouble(properties[TREE_ANIMATION_PERIOD]), Integer.parseInt(properties[TREE_HEALTH]), Functions.getImageList(imageStore, Tree.TREE_KEY));
             world.tryAddEntity(entity);
         }else{
-            throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", Entity.TREE_KEY, TREE_NUM_PROPERTIES));
+            throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", Tree.TREE_KEY, TREE_NUM_PROPERTIES));
         }
     }
 
     public static void parseObstacle(WorldModel world, String[] properties, Point pt, String id, ImageStore imageStore) {
         if (properties.length == OBSTACLE_NUM_PROPERTIES) {
-            Entity entity = Entity.createObstacle(id, pt, Double.parseDouble(properties[OBSTACLE_ANIMATION_PERIOD]), Functions.getImageList(imageStore, OBSTACLE_KEY));
+            Entity entity = Obstacle.createObstacle(id, pt, Double.parseDouble(properties[OBSTACLE_ANIMATION_PERIOD]), Functions.getImageList(imageStore, OBSTACLE_KEY));
             world.tryAddEntity(entity);
         }else{
             throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", OBSTACLE_KEY, OBSTACLE_NUM_PROPERTIES));
@@ -123,7 +123,7 @@ public final class Functions {
 
     public static void parseHouse(WorldModel world, String[] properties, Point pt, String id, ImageStore imageStore) {
         if (properties.length == HOUSE_NUM_PROPERTIES) {
-            Entity entity = Entity.createHouse(id, pt, Functions.getImageList(imageStore, HOUSE_KEY));
+            Entity entity = House.createHouse(id, pt, Functions.getImageList(imageStore, HOUSE_KEY));
             world.tryAddEntity(entity);
         }else{
             throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", HOUSE_KEY, HOUSE_NUM_PROPERTIES));
@@ -131,10 +131,10 @@ public final class Functions {
     }
     public static void parseStump(WorldModel world, String[] properties, Point pt, String id, ImageStore imageStore) {
         if (properties.length == STUMP_NUM_PROPERTIES) {
-            Entity entity = Entity.createStump(id, pt, Functions.getImageList(imageStore, Entity.STUMP_KEY));
+            Entity entity = Stump.createStump(id, pt, Functions.getImageList(imageStore, Stump.STUMP_KEY));
             world.tryAddEntity(entity);
         }else{
-            throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", Entity.STUMP_KEY, STUMP_NUM_PROPERTIES));
+            throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", Stump.STUMP_KEY, STUMP_NUM_PROPERTIES));
         }
     }
 
@@ -211,9 +211,9 @@ public final class Functions {
                 case Functions.DUDE_KEY -> Functions.parseDude(world, properties, pt, id, imageStore);
                 case Functions.FAIRY_KEY -> Functions.parseFairy(world, properties, pt, id, imageStore);
                 case Functions.HOUSE_KEY -> Functions.parseHouse(world, properties, pt, id, imageStore);
-                case Entity.TREE_KEY -> Functions.parseTree(world, properties, pt, id, imageStore);
-                case Entity.SAPLING_KEY -> Functions.parseSapling(world, properties, pt, id, imageStore);
-                case Entity.STUMP_KEY -> Functions.parseStump(world, properties, pt, id, imageStore);
+                case Tree.TREE_KEY -> Functions.parseTree(world, properties, pt, id, imageStore);
+                case Sapling.SAPLING_KEY -> Functions.parseSapling(world, properties, pt, id, imageStore);
+                case Stump.STUMP_KEY -> Functions.parseStump(world, properties, pt, id, imageStore);
                 default -> throw new IllegalArgumentException("Entity key is unknown");
             }
         }else{
