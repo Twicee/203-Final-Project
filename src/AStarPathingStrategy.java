@@ -12,38 +12,48 @@ public class AStarPathingStrategy implements PathingStrategy{
                                    Predicate<Point> canPassThrough,
                                    BiPredicate<Point, Point> withinReach,
                                    Function<Point, Stream<Point>> potentialNeighbors) {
+
         Node startNode = new Node(0, heuristic(start, end), null, start);
         Node currNode = null;
-        Map<Point, Node> closedList = new HashMap<>();
         Queue<Node> openList = new PriorityQueue<>(Comparator.comparingInt(Node::getF));
+        Map<Point, Node> openListMap = new HashMap<>();
+        Map<Point, Node> closedList = new HashMap<>();
         List<Point> computedPath = new ArrayList<>();
         openList.add(startNode);
-        while(!openList.isEmpty()){
+        openListMap.put(start, startNode);
+        while(!openList.isEmpty()) {
             currNode = openList.remove();
-            if(withinReach.test(currNode.getPosition(), end)){
+            openListMap.remove(currNode.getPosition());
+            if (withinReach.test(currNode.getPosition(), end)) {
                 return path(computedPath, currNode);
             }
-            if(closedList.containsKey(currNode.getPosition())){
-                if(currNode.getF() > closedList.get(currNode.getPosition()).getF()){
+            if (closedList.containsKey(currNode.getPosition())) {
+                if (currNode.getF() > closedList.get(currNode.getPosition()).getF()) {
                     continue;
                 }
             }
             List<Point> neighbors = potentialNeighbors.apply(currNode.getPosition())
                     .filter(canPassThrough)
-                    .filter(p -> !p.equals(start) && !p.equals(end)) //maybe delete
+                    .filter(pt -> !closedList.containsKey(pt))
                     .toList();
-            for (Point point : neighbors){
-                if (closedList.containsKey(point)){
-                    Node temp = new Node(currNode.getG() + 1, heuristic(point, end), currNode, point);
-                    if(temp.getF() > closedList.get(point).getF()){
-                        continue;
+            for (Point point : neighbors) {
+                Node neighborNode = new Node(currNode.getG() + 1, heuristic(point, end), currNode, point);
+                if (openListMap.containsKey(point)) {
+                    Node openListNode = openListMap.get(point);
+                    if (openListNode.getG() > neighborNode.getG()) {
+                        openList.remove(openListNode);
+                        openListMap.remove(point);
+                        openList.add(neighborNode);
+                        openListMap.put(point, neighborNode);
                     }
+                } else {
+                    openList.add(neighborNode);
+                    openListMap.put(point, neighborNode);
                 }
-                openList.add(new Node(currNode.getG() + 1, heuristic(point, end), currNode, point));
             }
             closedList.put(currNode.getPosition(), currNode);
         }
-        return path(computedPath, currNode);
+        return computedPath;
     }
 
     public int heuristic(Point point, Point goal){

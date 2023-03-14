@@ -47,7 +47,7 @@ public class Fairy extends Entity implements Executable, Moveable{
         PathingStrategy strat = new AStarPathingStrategy();
         List<Point> path = strat.computePath(getPosition(),
                 destPos,
-                pos-> world.withinBounds(pos )&& !world.isOccupied(pos),
+                pos-> world.withinBounds(pos)&& !world.isOccupied(pos),
                 Functions::adjacent,
                 PathingStrategy.CARDINAL_NEIGHBORS);
         return path.isEmpty() ? getPosition() : path.get(0);
