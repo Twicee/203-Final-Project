@@ -51,19 +51,26 @@ public class DudeNotFull extends Entity implements Transformable<Boolean>, Execu
         }
     }
     public Point nextPositionDude(WorldModel world, Point destPos) {
-        int horiz = Integer.signum(destPos.getX() - getPosition().getX());
-        Point newPos = new Point(getPosition().getX() + horiz, getPosition().getY());
-
-        if (horiz == 0 || world.isOccupied(newPos) && world.getOccupancyCell(newPos).getClass() != Stump.class) {
-            int vert = Integer.signum(destPos.getY() - getPosition().getY());
-            newPos = new Point(getPosition().getX(), getPosition().getY() + vert);
-
-            if (vert == 0 || world.isOccupied(newPos) && world.getOccupancyCell(newPos).getClass() != Stump.class) {
-                newPos = getPosition();
-            }
-        }
-
-        return newPos;
+        PathingStrategy strat = new AStarPathingStrategy();
+        List<Point> path = strat.computePath(getPosition(),
+                destPos,
+                pos-> !world.isOccupied(pos) && !(world.getOccupancyCell(pos) instanceof Stump),
+                Functions::adjacent,
+                PathingStrategy.CARDINAL_NEIGHBORS);
+        return path.isEmpty() ? getPosition() : path.get(0);
+//        int horiz = Integer.signum(destPos.getX() - getPosition().getX());
+//        Point newPos = new Point(getPosition().getX() + horiz, getPosition().getY());
+//
+//        if (horiz == 0 || world.isOccupied(newPos) && world.getOccupancyCell(newPos).getClass() != Stump.class) {
+//            int vert = Integer.signum(destPos.getY() - getPosition().getY());
+//            newPos = new Point(getPosition().getX(), getPosition().getY() + vert);
+//
+//            if (vert == 0 || world.isOccupied(newPos) && world.getOccupancyCell(newPos).getClass() != Stump.class) {
+//                newPos = getPosition();
+//            }
+//        }
+//
+//        return newPos;
     }
     public void scheduleActions(EventScheduler scheduler, WorldModel world, ImageStore imageStore) {
         Activity activity = new Activity(this, world, imageStore);

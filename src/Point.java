@@ -30,4 +30,5 @@ public final class Point {
     public int getY(){
         return this.y;
     }
+
 }

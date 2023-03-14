@@ -44,19 +44,26 @@ public class Fairy extends Entity implements Executable, Moveable{
         }
     }
     public Point nextPositionFairy(WorldModel world, Point destPos) {
-        int horiz = Integer.signum(destPos.getX() - getPosition().getX());
-        Point newPos = new Point(getPosition().getX() + horiz, getPosition().getY());
-
-        if (horiz == 0 || world.isOccupied(newPos)) {
-            int vert = Integer.signum(destPos.getY() - getPosition().getY());
-            newPos = new Point(getPosition().getX(), getPosition().getY() + vert);
-
-            if (vert == 0 || world.isOccupied(newPos)) {
-                newPos = getPosition();
-            }
-        }
-
-        return newPos;
+        PathingStrategy strat = new AStarPathingStrategy();
+        List<Point> path = strat.computePath(getPosition(),
+                destPos,
+                pos-> world.withinBounds(pos )&& !world.isOccupied(pos),
+                Functions::adjacent,
+                PathingStrategy.CARDINAL_NEIGHBORS);
+        return path.isEmpty() ? getPosition() : path.get(0);
+//        int horiz = Integer.signum(destPos.getX() - getPosition().getX());
+//        Point newPos = new Point(getPosition().getX() + horiz, getPosition().getY());
+//
+//        if (horiz == 0 || world.isOccupied(newPos)) {
+//            int vert = Integer.signum(destPos.getY() - getPosition().getY());
+//            newPos = new Point(getPosition().getX(), getPosition().getY() + vert);
+//
+//            if (vert == 0 || world.isOccupied(newPos)) {
+//                newPos = getPosition();
+//            }
+//        }
+//
+//        return newPos;
     }
 
     public void scheduleActions(EventScheduler scheduler, WorldModel world, ImageStore imageStore) {
