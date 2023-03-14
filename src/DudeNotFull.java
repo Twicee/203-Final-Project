@@ -54,7 +54,7 @@ public class DudeNotFull extends Entity implements Transformable<Boolean>, Execu
         PathingStrategy strat = new AStarPathingStrategy();
         List<Point> path = strat.computePath(getPosition(),
                 destPos,
-                pos-> !world.isOccupied(pos) && !(world.getOccupancyCell(pos) instanceof Stump),
+                pos-> world.withinBounds(pos) && !world.isOccupied(pos) && !(world.getOccupancyCell(pos) instanceof Stump),
                 Functions::adjacent,
                 PathingStrategy.CARDINAL_NEIGHBORS);
         return path.isEmpty() ? getPosition() : path.get(0);
