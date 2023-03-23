@@ -134,16 +134,15 @@ public final class WorldModel {
     public void setBackgroundCell(Point pos, Background background) {
         this.background[pos.getY()][pos.getX()] = background;
     }
-    public Optional<Entity> findNearest(Point pos, List<EntityKind> kinds) {
+    public Optional<Entity> findNearest(Point pos, List<Class> kinds) {
         List<Entity> ofType = new LinkedList<>();
-        for (EntityKind kind : kinds) {
-            for (Entity entity : this.entities) {
-                if (entity.getEntityKind() == kind) {
+        for (Entity entity : entities) {
+            for (Class kind : kinds){
+                if(kind.isInstance(entity)){
                     ofType.add(entity);
                 }
             }
         }
-
         return nearestEntity(ofType, pos);
     }
     public Optional<Entity> nearestEntity(List<Entity> entities, Point pos) {
