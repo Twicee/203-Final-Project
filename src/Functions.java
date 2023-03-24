@@ -59,6 +59,12 @@ public final class Functions {
     private static final int TREE_HEALTH = 2;
     private static final int TREE_NUM_PROPERTIES = 3;
 
+    private static final String ZOMBIE_KEY = "zombie";
+    private static final int ZOMBIE_ACTION_PERIOD = 0;
+    private static final int ZOMBIE_ANIMATION_PERIOD = 1;
+    private static final int ZOMBIE_NUM_PROPERTIES = 3;
+
+
 
     public static boolean adjacent(Point p1, Point p2) {
         return (p1.getX() == p2.getX() && Math.abs(p1.getY() - p2.getY()) == 1) || (p1.getY() == p2.getY() && Math.abs(p1.getX() - p2.getX()) == 1);
@@ -87,10 +93,18 @@ public final class Functions {
 
     public static void parseDude(WorldModel world, String[] properties, Point pt, String id, ImageStore imageStore) {
         if (properties.length == DUDE_NUM_PROPERTIES) {
-            Entity entity = DudeNotFull.createDudeNotFull(id, pt, Double.parseDouble(properties[DUDE_ACTION_PERIOD]), Double.parseDouble(properties[DUDE_ANIMATION_PERIOD]), Integer.parseInt(properties[DUDE_LIMIT]), Functions.getImageList(imageStore, DUDE_KEY));
+            Entity entity = DudeNotFull.createDudeNotFull(id, pt, Double.parseDouble(properties[DUDE_ACTION_PERIOD]), Double.parseDouble(properties[DUDE_ANIMATION_PERIOD]), Integer.parseInt(properties[DUDE_LIMIT]), Functions.getImageList(imageStore, DUDE_KEY), 5);
             world.tryAddEntity(entity);
         }else{
             throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", DUDE_KEY, DUDE_NUM_PROPERTIES));
+        }
+    }
+    public static void parseZombie(WorldModel world, String[] properties, Point pt, String id, ImageStore imageStore) {
+        if (properties.length == ZOMBIE_NUM_PROPERTIES) {
+            Entity entity = Zombie.createZombie(id, pt, Double.parseDouble(properties[ZOMBIE_ACTION_PERIOD]), Double.parseDouble(properties[ZOMBIE_ANIMATION_PERIOD]), Functions.getImageList(imageStore, ZOMBIE_KEY));
+            world.tryAddEntity(entity);
+        }else{
+            throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", ZOMBIE_KEY, ZOMBIE_NUM_PROPERTIES));
         }
     }
 
@@ -209,6 +223,7 @@ public final class Functions {
             switch (key) {
                 case Functions.OBSTACLE_KEY -> Functions.parseObstacle(world, properties, pt, id, imageStore);
                 case Functions.DUDE_KEY -> Functions.parseDude(world, properties, pt, id, imageStore);
+                case Functions.ZOMBIE_KEY -> Functions.parseZombie(world, properties, pt, id, imageStore);
                 case Functions.FAIRY_KEY -> Functions.parseFairy(world, properties, pt, id, imageStore);
                 case Functions.HOUSE_KEY -> Functions.parseHouse(world, properties, pt, id, imageStore);
                 case Tree.TREE_KEY -> Functions.parseTree(world, properties, pt, id, imageStore);

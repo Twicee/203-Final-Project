@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class DudeNotFull extends AnimationableEntity implements Transformable, Schedulable, Moveable, Pathable, Executable{
+public class DudeNotFull extends HealthAnimationableEntity implements Transformable, Schedulable, Moveable, Pathable, Executable{
     private double actionPeriod;
     private int resourceCount;
     private int resourceLimit;
@@ -18,8 +18,8 @@ public class DudeNotFull extends AnimationableEntity implements Transformable, S
     public int getResourceLimit() {
         return resourceLimit;
     }
-    public DudeNotFull(String id, Point position, List<PImage> images, double actionPeriod, double animationPeriod, int resourceCount, int resourceLimit){
-        super(id, position, images, animationPeriod);
+    public DudeNotFull(String id, Point position, List<PImage> images, double actionPeriod, double animationPeriod, int resourceCount, int resourceLimit, int health){
+        super(id, position, images, animationPeriod, health);
         this.actionPeriod = actionPeriod;
         this.resourceCount = resourceCount;
         this.resourceLimit = resourceLimit;
@@ -27,20 +27,24 @@ public class DudeNotFull extends AnimationableEntity implements Transformable, S
 
     public void execute(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
         Optional<Entity> target = world.findNearest(this.getPosition(), List.of(Tree.class, Sapling.class));
-        if (target.isEmpty() || !move(world, target.get(), scheduler) || !transform(world, scheduler, imageStore)) {
-            scheduler.scheduleEvent(this, Activity.createActivityAction(this, world, imageStore), this.actionPeriod);
+        if (this.getHealth() <= 0) {
+            Entity zombie = Zombie.createZombie(Zombie.ZOMBIE_KEY + "_" + this.getId(), this.getPosition(), 1, 3, Functions.getImageList(imageStore, Zombie.ZOMBIE_KEY));
+            world.removeEntity(scheduler, this);
+
+            world.addEntity(zombie);
+            ((Zombie)zombie).scheduleActions(scheduler, world, imageStore);
+        } else {
+            if (target.isEmpty() || !move(world, target.get(), scheduler) || !transform(world, scheduler, imageStore)) {
+                scheduler.scheduleEvent(this, Activity.createActivityAction(this, world, imageStore), this.actionPeriod);
+            }
         }
-//        target = world.findNearest(this.getPosition(), Sapling.class);
-//        if (target.isEmpty() || !move(world, target.get(), scheduler) || !transform(world, scheduler, imageStore)) {
-//            scheduler.scheduleEvent(this, Activity.createActivityAction(this, world, imageStore), this.actionPeriod);
-//        }
     }
-    public static Entity createDudeNotFull(String id, Point position, double actionPeriod, double animationPeriod, int resourceLimit, List<PImage> images) {
-        return new DudeNotFull(id, position, images, actionPeriod, animationPeriod, 0, resourceLimit);
+    public static Entity createDudeNotFull(String id, Point position, double actionPeriod, double animationPeriod, int resourceLimit, List<PImage> images, int health) {
+        return new DudeNotFull(id, position, images, actionPeriod, animationPeriod, 0, resourceLimit, health);
     }
     public Boolean transform(WorldModel world, EventScheduler scheduler, ImageStore imageStore) {
         if (this.getResourceCount() >= this.getResourceLimit()) {
-            Entity dude = DudeFull.createDudeFull(this.getId(), this.getPosition(), this.getActionPeriod(), this.getAnimationPeriod(), this.getResourceLimit(), this.getImages());
+            Entity dude = DudeFull.createDudeFull(this.getId(), this.getPosition(), 1, 4, this.getResourceLimit(), this.getImages(), 5);
 
             world.removeEntity(scheduler, this);
             scheduler.unscheduleAllEvents(this);

@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import processing.core.*;
 
@@ -77,7 +78,22 @@ public final class VirtualWorld extends PApplet {
             Entity entity = entityOptional.get();
             System.out.println(entity.getId() + ": " + entity.getClass() + " : " + ((HealthAnimationableEntity)entity).getHealth());
         }
+        spawnZombie(Zombie.ZOMBIE_KEY, pressed);
 
+    }
+    private void spawnZombie(String id, Point position){
+        Entity zombie = Zombie.createZombie(id, position, 1, 3, Functions.getImageList(imageStore, id));
+        world.addEntity(zombie);
+
+        ((Zombie)zombie).scheduleActions(scheduler, world, imageStore);
+        for (int x = position.getX() - 3; x <= position.getX() + 3; x++) {
+            for (int y = position.getY() - 3; y <= position.getY() + 3; y++) {
+                if (x >= 0 && x < world.getNumCols() && y >= 0 && y < world.getNumRows()) {
+                    Background sludge = new Background(Zombie.SLUDGE_KEY, Functions.getImageList(imageStore, Zombie.SLUDGE_KEY));
+                    world.setBackgroundCell(new Point(x, y), sludge);
+                }
+            }
+        }
     }
 
     public void scheduleActions(WorldModel world, EventScheduler scheduler, ImageStore imageStore) {
